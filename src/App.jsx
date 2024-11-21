@@ -7,9 +7,9 @@ import Home from './pages/Home';
 import Login from './Login';
 import Purchase_history from './components/Purchase_history';
 import Clubs from './pages/Clubs';
-import Rating from './pages/Rating';
 import Reyting from './pages/Reyting';
 import Posts from './pages/Posts';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 const App = () => {
   const location = useLocation();
@@ -49,10 +49,13 @@ const App = () => {
       <div className={`flex-grow pb-20 md:pb-0 ${shouldShowSidebar ? (isOpen ? 'md:ml-[250px]' : 'md:ml-[80px]') : ''} transition-all duration-300`}>
         {!isMobile && (
           <button
-            className="fixed ml-1 mt-3  bg-indigo-500 z-50 text-white p-2 rounded-full shadow-lg hover:bg-indigo-600 transition-all"
+            className="fixed mt-[280px] mr-[100px] h-[200px] w-[40px] bg-indigo-500 z-50 text-white p-2  shadow-lg hover:bg-indigo-600 transition-all"
             onClick={toggleSidebar}
+            style={{
+              clipPath: 'polygon(0% 0%, 100% 50%, 0% 100%)',
+            }}
           >
-            {isOpen ? "←" : "→"}
+            {isOpen ? <ArrowLeft /> : <ArrowRight />}
           </button>
         )}
         <Routes>

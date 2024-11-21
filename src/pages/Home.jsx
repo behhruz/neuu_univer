@@ -1,5 +1,6 @@
 import React from 'react'
 import { Search, User } from 'lucide-react'
+import Reyting from './Reyting'
 
 export default function Home() {
   return (
@@ -42,14 +43,9 @@ export default function Home() {
         </div>
 
         <div>
-          <h3 className="text-xl font-bold text-violet-800 mb-4">Reyting</h3>
-          <div className="bg-violet-100 rounded-lg p-4 mb-4 flex items-center">
-            <User className="text-violet-400 mr-2" size={24} />
-            <span className="text-violet-700 font-semibold">Profil rasm</span>
+          <div className=''>
+            <Reyting />
           </div>
-          {[...Array(6)].map((_, index) => (
-            <div key={index} className="bg-violet-100 h-8 rounded-lg mb-2"></div>
-          ))}
         </div>
       </div>
     </div>

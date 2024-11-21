@@ -126,29 +126,25 @@ const PurchaseHistory = () => {
                       className="w-full h-full object-contain"
                     />
                   </div>
-                  
+
                   <div className="space-y-3 w-full">
-                    <span className={`inline-block px-3 py-1 text-sm font-medium rounded-full ${
-                      purchase.status === 'ожидает выдачи' 
-                        ? 'bg-blue-50 text-blue-600' 
-                        : 'bg-green-50 text-green-600'
-                    }`}>
+                    <span className={`inline-block px-3 py-1 text-sm font-medium rounded-full ${purchase.status === 'ожидает выдачи' ? 'bg-blue-50 text-blue-600' : ''} ${purchase.status === 'получено' ? 'bg-green-50 text-green-600' : ''} ${purchase.status === 'отменен' ? 'bg-red-50 text-red-600' : ''}`}>
                       {purchase.status}
                     </span>
-                    
+
                     <h3 className="text-xl font-semibold text-gray-900">
                       {purchase.productName}
                     </h3>
-                    
+
                     <div className="flex items-center justify-center gap-1">
                       <span className="text-2xl font-bold text-indigo-500">{purchase.cost}</span>
                       <span className="text-gray-600">Coins</span>
                     </div>
-                    
+
                     <div className="text-sm text-gray-500">
                       Код покупки <span className="text-gray-900 font-medium">{purchase._id.slice(-5)}</span>
                     </div>
-                    
+
                     <div className="flex items-center justify-center text-sm text-gray-500 gap-1.5">
                       <Calendar className="w-4 h-4" />
                       <span>{new Date(purchase.purchaseDate).toLocaleString('ru-RU', {
@@ -163,7 +159,7 @@ const PurchaseHistory = () => {
 
                   {purchase.status === 'ожидает выдачи' && (
                     <button
-                      className="w-full mt-auto bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-green-900 transition-colors duration-300 flex items-center justify-center"
+                      className="w-full mt-auto bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-900 transition-colors duration-300 flex items-center justify-center"
                       onClick={() => openCancelModal(purchase)}
                     >
                       <X className="mr-2 h-5 w-5" />

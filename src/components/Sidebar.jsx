@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Users, Home, ShoppingBag, ClubIcon as Clubs, User, FileText, Star, LogOut, Menu } from "lucide-react";
-import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import { Link, useLocation } from "react-router-dom";
 
 const Sidebar = ({ isMobile, isOpen, toggleSidebar }) => {
+  const location = useLocation();
+  const sidebarRef = useRef(null);
+  const toggleButtonRef = useRef(null);
+
   const navigation = [
     { name: "Home", href: "/", icon: Home },
     { name: "Shop", href: "/shop", icon: ShoppingBag },
@@ -12,10 +16,46 @@ const Sidebar = ({ isMobile, isOpen, toggleSidebar }) => {
     { name: "Rating", href: "/rating", icon: Star },
   ];
 
+  // Close sidebar on route change
+  useEffect(() => {
+    if (isMobile && isOpen) {
+      toggleSidebar();
+    }
+  }, [location.pathname]); // Reacts only to pathname changes
+
+  // Close sidebar when clicking outside in mobile view
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        isOpen &&
+        isMobile &&
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target) &&
+        toggleButtonRef.current &&
+        !toggleButtonRef.current.contains(event.target)
+      ) {
+        toggleSidebar();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isOpen, isMobile, toggleSidebar]);
+
+  // Ensure localStorage sync
+  useEffect(() => {
+    if (isOpen) {
+      localStorage.setItem("sidebarState", "open");
+    } else {
+      localStorage.setItem("sidebarState", "hidden");
+    }
+  }, [isOpen]);
+
   return (
     <div className="fixed z-20 top-0 left-0">
       {/* Mobile toggle button */}
       <button
+        ref={toggleButtonRef}
         className="md:hidden fixed top-4 left-4 z-50 bg-indigo-500 text-white p-2 rounded-full shadow-lg hover:bg-indigo-600 transition-all"
         onClick={toggleSidebar}
       >
@@ -24,13 +64,14 @@ const Sidebar = ({ isMobile, isOpen, toggleSidebar }) => {
 
       {/* Sidebar */}
       <div
+        ref={sidebarRef}
         className={`transition-all duration-300 ease-in-out z-40
           ${isMobile ? "fixed inset-y-0 left-0" : "relative"}
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
           flex flex-col h-screen
           ${isOpen ? "w-[250px]" : "w-[80px]"}
           bg-gradient-to-b from-indigo-500 to-indigo-700 shadow-lg text-white
-          md:translate-x-0 fixed top-0 left-0`}
+          md:translate-x-0`}
       >
         {/* User Info */}
         <div className="p-4">
@@ -58,8 +99,9 @@ const Sidebar = ({ isMobile, isOpen, toggleSidebar }) => {
             {navigation.map((item) => (
               <Link
                 key={item.name}
-                to={item.href}  // Use Link from react-router-dom
+                to={item.href}
                 className={`flex items-center ${isOpen && "justify-start"} w-full px-3 py-3 mb-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 transition-all shadow-md`}
+                onClick={() => isMobile && toggleSidebar()}
               >
                 <item.icon className="h-5 w-5 text-white" />
                 {isOpen && <span className="ml-4 font-medium">{item.name}</span>}
@@ -71,10 +113,10 @@ const Sidebar = ({ isMobile, isOpen, toggleSidebar }) => {
         {/* Logout Button */}
         <div className="p-4">
           <button
-            className={`w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg shadow-lg flex items-center justify-center transition-all ${!isOpen && "justify-center"}`}
-            onClick={() => {
-              console.log("Logging out...");
-            }}
+            className={`w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg shadow-lg flex items-center justify-center transition-all ${
+              !isOpen && "justify-center"
+            }`}
+            onClick={() => console.log("Logging out...")}
           >
             <Link to="/login">
               {isOpen && <span className="ml-2">Log out</span>}
